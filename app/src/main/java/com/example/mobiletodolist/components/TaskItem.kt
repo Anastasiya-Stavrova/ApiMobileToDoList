@@ -8,12 +8,12 @@ import kotlinx.serialization.Serializable
 data class TaskItem(
     var Id : Int,
     var Description: String,
-    var IsCompleted: Int = 0
+    var IsCompleted: String = "0"
 ) {
 
     fun imageResource(): Int
     {
-        if(IsCompleted == 1){
+        if(IsCompleted == "1"){
             return R.drawable.radio_checked
         }
         return R.drawable.radio_unchecked

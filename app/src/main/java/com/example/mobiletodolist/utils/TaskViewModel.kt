@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel
 import com.example.mobiletodolist.TaskItem
 import com.google.gson.Gson
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,26 +29,15 @@ class TaskViewModel: ViewModel() {
     }
 
     fun addTaskItem(newTask: String){
-        val task = """{ "Id" : "0", "Description": "${newTask}" }""".trimIndent()
-
+        val task = """{ "Id" : "0", "Description": "$newTask" }""".trimIndent()
         val taskJson = Json.decodeFromString<TaskItem>(task);
-        println(taskJson);
-
-
 
         RetrofitBuilder.api.createTodo(taskJson).enqueue(object : Callback<TaskItem> {
             override fun onResponse(call: Call<TaskItem>, response: Response<TaskItem>) {
                 if (response.isSuccessful) {
-                    Log.d("rrrrrrrrrrrrrrrrr", "${response.body()}")
-                    /*val list = taskItemsList.value
-                    val task = list!!.find{ it.Id == id}!!
-                    list.remove(task)
-                    taskItemsList.postValue(list)*/
-
                     loadData(myContext)
-                }
-                else{
-                    Log.d("rrrrrrrrrrrrrrrrr", "No")
+
+                    Log.d("Message", "The todo was successfully added")
                 }
             }
 
@@ -57,13 +45,6 @@ class TaskViewModel: ViewModel() {
                 Log.d("Error", t.message.toString())
             }
         })
-
-
-        /*val list = taskItemsList.value
-        list!!.add(0, newTask)
-        taskItemsList.postValue(list)
-
-        saveDataToJsonFile(myContext)*/
     }
 
     /*fun updateTaskItem(id: UUID, desc: String){
@@ -118,6 +99,8 @@ class TaskViewModel: ViewModel() {
                     val task = list!!.find{ it.Id == id}!!
                     list.remove(task)
                     taskItemsList.postValue(list)
+
+                    Log.d("Message", "The todo was successfully deleted")
                 }
             }
 
@@ -127,26 +110,76 @@ class TaskViewModel: ViewModel() {
         })
     }
 
-    /*fun changeTaskItemsList(file: File){
-        val json = file.readText()
+    fun changeTaskItemsList(file: File){
+        RetrofitBuilder.api.deleteTodos().enqueue(object : Callback<TaskItem> {
+            override fun onResponse(call: Call<TaskItem>, response: Response<TaskItem>) {
+                if (response.isSuccessful) {
+                    Log.d("Message", "The todo list was successfully deleted")
+
+                    val task = file.readText().trimIndent()
+                    val taskJson = Json.decodeFromString<MutableList<TaskItem>>(task);
+
+                    RetrofitBuilder.api.uploadTodos(taskJson).enqueue(object : Callback<MutableList<TaskItem>> {
+                        override fun onResponse(call: Call<MutableList<TaskItem>>,
+                                                response: Response<MutableList<TaskItem>>) {
+                            if (response.isSuccessful) {
+                                loadData(myContext)
+
+                                Log.d("Message", "The todo list was successfully upload")
+                            } else{
+                                Log.d("Message", response.message())
+                            }
+                        }
+
+                        override fun onFailure(call: Call<MutableList<TaskItem>>, t: Throwable) {
+                            if (t.message.toString() == "Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $") {
+                                loadData(myContext)
+
+                                Log.d("Message", "The todo list was successfully upload")
+                            }else{
+                                Log.d("Error", t.message.toString())
+                            }
+                        }
+                    })
+                }
+            }
+
+            override fun onFailure(call: Call<TaskItem>, t: Throwable) {
+                Log.d("Error", t.message.toString())
+            }
+        })
+
+
+
+        /*val json = file.readText()
         val type = object : TypeToken<MutableList<TaskItem>>() {}.type
         taskItemsList.value = Gson().fromJson(json, type)
 
         saveDataToJsonFile(myContext)
-    }*/
+
+        Toast.makeText(applicationContext, "Список дел добавлен!", LENGTH_SHORT).show()*/
+    }
 
     fun loadData(context: Context) {
         RetrofitBuilder.api.showTodos().enqueue(object : Callback<MutableList<TaskItem>> {
             override fun onResponse(call: Call<MutableList<TaskItem>>,
                                     response: Response<MutableList<TaskItem>>) {
-
                 if (response.isSuccessful) {
                     taskItemsList.value = response.body()
+                    taskItemsList.value?.reverse()
+
+                    Log.d("Message", "The todo list has been uploaded successfully")
                 }
             }
 
             override fun onFailure(call: Call<MutableList<TaskItem>>, t: Throwable) {
-                Log.d("Error", t.message.toString())
+                if (t.message.toString() == "Expected BEGIN_ARRAY but was BEGIN_OBJECT at line 1 column 2 path $") {
+                    taskItemsList.value = mutableListOf()
+
+                    Log.d("Message", "The todo list has been uploaded successfully")
+                }else{
+                    Log.d("Error", t.message.toString())
+                }
             }
         })
 
@@ -190,5 +223,7 @@ class TaskViewModel: ViewModel() {
         file.writeText(jsonString)
 
         Toast.makeText(myContext, "Список дел сохранен!", LENGTH_SHORT).show()
+
+        Log.d("Message", "The todo list has been successfully saved")
     }
 }

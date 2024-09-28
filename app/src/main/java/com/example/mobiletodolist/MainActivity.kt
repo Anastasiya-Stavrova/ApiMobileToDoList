@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -18,6 +19,7 @@ import com.example.mobiletodolist.databinding.ActivityMainBinding
 import com.example.mobiletodolist.utils.TaskItemsAdapter
 import com.example.mobiletodolist.utils.TaskItemsClickListener
 import com.example.mobiletodolist.utils.TaskViewModel
+import java.io.File
 
 
 class MainActivity : AppCompatActivity(), TaskItemsClickListener {
@@ -45,9 +47,9 @@ class MainActivity : AppCompatActivity(), TaskItemsClickListener {
             taskViewModel.downloadFile()
         }
 
-        /*binding.uploadButton.setOnClickListener {
+        binding.uploadButton.setOnClickListener {
             getDownloadsFolder()
-        }*/
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -111,7 +113,7 @@ class MainActivity : AppCompatActivity(), TaskItemsClickListener {
         startActivityForResult(Intent.createChooser(intent, "Select a file"), 777)
     }
 
-    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 777) {
@@ -122,14 +124,12 @@ class MainActivity : AppCompatActivity(), TaskItemsClickListener {
             val child = selectedFile.substring(lastIndex + 1, selectedFile.length)
 
             if (lastIndex != -1) {
-                val file = File("/storage/emulated/0/Download/", "${child}")
+                val file = File("/storage/emulated/0/Download/", child)
 
                 if (file != null) {
                     taskViewModel.changeTaskItemsList(file)
-
-                    Toast.makeText(applicationContext, "Список дел добавлен!", LENGTH_SHORT).show()
                 }
             }
         }
-    }*/
+    }
 }

@@ -15,7 +15,7 @@ class TaskItemsViewHolder(
     fun bindTaskItem(taskItem: TaskItem){
         binding.taskName.text = taskItem.Description
 
-        if(taskItem.IsCompleted == 1){
+        if(taskItem.IsCompleted == "1"){
             binding.taskName.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         }
 
