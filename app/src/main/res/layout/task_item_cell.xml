@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/taskCellContainer"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    app:cardCornerRadius="5dp"
+    android:layout_margin="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="@drawable/border">
+
+        <ImageButton
+            android:id="@+id/completeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="5dp"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="checkbox"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:src="@drawable/radio_unchecked"
+            app:tint="?attr/colorPrimary" />
+
+
+        <TextView
+            android:id="@+id/taskName"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="Task Description"
+            android:textColor="?attr/colorPrimary"/>
+
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="5dp"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="deleteTask"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:src="@drawable/delete_task"
+            app:tint="?attr/colorPrimary" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
