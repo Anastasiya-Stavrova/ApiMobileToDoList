@@ -22,13 +22,13 @@ class TaskItemsViewHolder(
         binding.completeButton.setImageResource(taskItem.imageResource())
         binding.completeButton.setColorFilter(taskItem.imageColor(context))
 
-        /*binding.completeButton.setOnClickListener {
+        binding.completeButton.setOnClickListener {
             clickListener.changeCheckedTaskItem(taskItem)
-        }*/
+        }
 
-        /*binding.taskCellContainer.setOnClickListener {
+        binding.taskCellContainer.setOnClickListener {
             clickListener.editTaskItem(taskItem)
-        }*/
+        }
 
         binding.deleteButton.setOnClickListener {
             clickListener.deleteTaskItem(taskItem)

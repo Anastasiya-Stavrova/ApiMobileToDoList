@@ -17,7 +17,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class TaskForm(var taskItem: TaskItem?): BottomSheetDialogFragment()
 {
-
     private lateinit var binding: FragmentNewTaskSheetBinding
     private lateinit var taskViewModel: TaskViewModel
 
@@ -34,16 +33,14 @@ class TaskForm(var taskItem: TaskItem?): BottomSheetDialogFragment()
             val editable = Editable.Factory.getInstance()
 
             binding.taskDesc.text = editable.newEditable(taskItem!!.Description)
-        }
-        else {
+        } else {
             binding.taskTitle.text = "Добавить задачу"
         }
 
         binding.saveButton.setOnClickListener {
             if(binding.taskDesc.text.toString() != ""){
                 saveAction()
-            }
-            else {
+            } else {
                 Toast.makeText(context, "Заполните поле!", LENGTH_SHORT).show()
             }
         }
@@ -54,10 +51,9 @@ class TaskForm(var taskItem: TaskItem?): BottomSheetDialogFragment()
 
         if (taskItem == null) {
             taskViewModel.addTaskItem(description)
+        } else {
+            taskViewModel.updateTaskItem(taskItem!!.Id, description)
         }
-        /*else {
-            taskViewModel.updateTaskItem(taskItem!!.id, description)
-        }*/
 
         binding.taskDesc.setText("")
 
@@ -67,7 +63,7 @@ class TaskForm(var taskItem: TaskItem?): BottomSheetDialogFragment()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentNewTaskSheetBinding.inflate(inflater, container, false)
         return  binding.root
     }

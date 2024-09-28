@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mobiletodolist.TaskItem
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import retrofit2.Call
@@ -30,7 +31,7 @@ class TaskViewModel: ViewModel() {
 
     fun addTaskItem(newTask: String){
         val task = """{ "Id" : "0", "Description": "$newTask" }""".trimIndent()
-        val taskJson = Json.decodeFromString<TaskItem>(task);
+        val taskJson = Json.decodeFromString<TaskItem>(task)
 
         RetrofitBuilder.api.createTodo(taskJson).enqueue(object : Callback<TaskItem> {
             override fun onResponse(call: Call<TaskItem>, response: Response<TaskItem>) {
@@ -47,32 +48,19 @@ class TaskViewModel: ViewModel() {
         })
     }
 
-    /*fun updateTaskItem(id: UUID, desc: String){
-        val list = taskItemsList.value
-        val task = list!!.find{ it.id == id}!!
-        task.description = desc
-        taskItemsList.postValue(list)
+    fun updateTaskItem(id: Int, desc: String){
+        val newTask = """{ "Id" : 0, "Description" : "$desc", "IsCompleted": "" }""".trimIndent()
+        val taskJson = Json.decodeFromString<TaskItem>(newTask);
 
-        saveDataToJsonFile(myContext)
-    }*/
-
-    /*fun changeChecked(taskItem: TaskItem){
-        var changed = if (taskItem.IsCompleted == 1){ 0 }else{ 1 }
-
-        RetrofitBuilder.api.updateTodo(taskItem.Id).enqueue(object : Callback<TaskItem> {
+        RetrofitBuilder.api.updateTodo(id, taskJson).enqueue(object : Callback<TaskItem> {
             override fun onResponse(call: Call<TaskItem>, response: Response<TaskItem>) {
                 if (response.isSuccessful) {
-                    Log.d("rrrrrrrrrr", "${response.body()}")
-                    /*val list = taskItemsList.value
-                    val task = list!!.find{ it.Id == taskItem.Id}!!
+                    val list = taskItemsList.value
+                    val task = list!!.find{ it.Id == id}!!
+                    task.Description = desc
+                    taskItemsList.postValue(list)
 
-                    if (task.IsCompleted == 1){
-                        task.IsCompleted = 0
-                    }else{
-                        task.IsCompleted = 1
-                    }
-
-                    taskItemsList.postValue(list)*/
+                    Log.d("Message", "The todo was successfully changed")
                 }
             }
 
@@ -80,16 +68,31 @@ class TaskViewModel: ViewModel() {
                 Log.d("Error", t.message.toString())
             }
         })
+    }
 
+    fun changeChecked(taskItem: TaskItem){
+        val changed = if (taskItem.IsCompleted == "1"){ "0" }else{ "1" }
 
+        val newTask = """{ "Id" : 0, "Description" : "", "IsCompleted": "$changed" }""".trimIndent()
+        val taskJson = Json.decodeFromString<TaskItem>(newTask);
 
-        val list = taskItemsList.value
-        val task = list!!.find{ it.id == taskItem.id}!!
-        task.checked = !task.checked
-        taskItemsList.postValue(list)
+        RetrofitBuilder.api.updateTodo(taskItem.Id, taskJson).enqueue(object : Callback<TaskItem> {
+            override fun onResponse(call: Call<TaskItem>, response: Response<TaskItem>) {
+                if (response.isSuccessful) {
+                    val list = taskItemsList.value
+                    val task = list!!.find{ it.Id == taskItem.Id}!!
+                    task.IsCompleted = if (taskItem.IsCompleted == "1"){ "0" }else{ "1" }
+                    taskItemsList.postValue(list)
 
-        saveDataToJsonFile(myContext)
-    }*/
+                    Log.d("Message", "The todo was successfully changed")
+                }
+            }
+
+            override fun onFailure(call: Call<TaskItem>, t: Throwable) {
+                Log.d("Error", t.message.toString())
+            }
+        })
+    }
 
     fun deleteTaskItem(id: Int){
         RetrofitBuilder.api.deleteTodo(id).enqueue(object : Callback<TaskItem> {
@@ -148,16 +151,6 @@ class TaskViewModel: ViewModel() {
                 Log.d("Error", t.message.toString())
             }
         })
-
-
-
-        /*val json = file.readText()
-        val type = object : TypeToken<MutableList<TaskItem>>() {}.type
-        taskItemsList.value = Gson().fromJson(json, type)
-
-        saveDataToJsonFile(myContext)
-
-        Toast.makeText(applicationContext, "Список дел добавлен!", LENGTH_SHORT).show()*/
     }
 
     fun loadData(context: Context) {
@@ -185,28 +178,6 @@ class TaskViewModel: ViewModel() {
 
         myContext = context
     }
-
-
-    /*val file = File(context.filesDir, "taskItems.json")
-
-    if (file.exists()) {
-        val json = file.readText()
-        val type = object : TypeToken<MutableList<TaskItem>>() {}.type
-        taskItemsList.value = Gson().fromJson(json, type)
-    }*/
-
-
-
-
-    /*private fun saveDataToJsonFile(context: Context) {
-        val list = taskItemsList.value
-
-        val gson = Gson()
-        val jsonString = gson.toJson(list)
-
-        val file = File(context.filesDir, "taskItems.json")
-        file.writeText(jsonString)
-    }*/
 
     fun downloadFile(){
         val sdf = SimpleDateFormat("dd.M.yyyy_hh:mm:ss")

@@ -72,13 +72,13 @@ class MainActivity : AppCompatActivity(), TaskItemsClickListener {
         }
     }
 
-    /*override fun editTaskItem(taskItem: TaskItem) {
+    override fun editTaskItem(taskItem: TaskItem) {
         TaskForm(taskItem).show(supportFragmentManager, "newTaskTag")
-    }*/
+    }
 
-    /*override fun changeCheckedTaskItem(taskItem: TaskItem) {
+    override fun changeCheckedTaskItem(taskItem: TaskItem) {
         taskViewModel.changeChecked(taskItem)
-    }*/
+    }
 
     override fun deleteTaskItem(taskItem: TaskItem) {
         taskViewModel.deleteTaskItem(taskItem.Id)
@@ -113,6 +113,7 @@ class MainActivity : AppCompatActivity(), TaskItemsClickListener {
         startActivityForResult(Intent.createChooser(intent, "Select a file"), 777)
     }
 
+    @Deprecated("This method has been deprecated in favor of using the Activity Result API\n      which brings increased type safety via an {@link ActivityResultContract} and the prebuilt\n      contracts for common intents available in\n      {@link androidx.activity.result.contract.ActivityResultContracts}, provides hooks for\n      testing, and allow receiving results in separate, testable classes independent from your\n      activity. Use\n      {@link #registerForActivityResult(ActivityResultContract, ActivityResultCallback)}\n      with the appropriate {@link ActivityResultContract} and handling the result in the\n      {@link ActivityResultCallback#onActivityResult(Object) callback}.")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -128,6 +129,8 @@ class MainActivity : AppCompatActivity(), TaskItemsClickListener {
 
                 if (file != null) {
                     taskViewModel.changeTaskItemsList(file)
+
+                    Toast.makeText(applicationContext, "Список дел добавлен!", LENGTH_SHORT).show()
                 }
             }
         }

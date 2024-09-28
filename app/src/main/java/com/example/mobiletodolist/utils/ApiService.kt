@@ -20,8 +20,8 @@ interface ApiService {
     @DELETE("/delete/todos/{id}")
     fun deleteTodo(@Path("id") id : Int) : Call<TaskItem>
 
-    /*@PUT("/update/todos/{id}")
-    fun updateTodo(@Path("id") id: Int, @Body requestBody: RequestBody) : Call<TaskItem>*/
+    @PUT("/update/todos/{id}")
+    fun updateTodo(@Path("id") id: Int, @Body task: TaskItem) : Call<TaskItem>
 
     @DELETE("/delete/todos")
     fun deleteTodos() : Call<TaskItem>
