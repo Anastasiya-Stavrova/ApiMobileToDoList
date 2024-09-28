@@ -9,7 +9,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mobiletodolist.TaskItem
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,13 +29,42 @@ class TaskViewModel: ViewModel() {
         taskItemsList.value = mutableListOf()
     }
 
-    /*fun addTaskItem(newTask: TaskItem){
-        val list = taskItemsList.value
+    fun addTaskItem(newTask: String){
+        val task = """{ "Id" : "0", "Description": "${newTask}" }""".trimIndent()
+
+        val taskJson = Json.decodeFromString<TaskItem>(task);
+        println(taskJson);
+
+
+
+        RetrofitBuilder.api.createTodo(taskJson).enqueue(object : Callback<TaskItem> {
+            override fun onResponse(call: Call<TaskItem>, response: Response<TaskItem>) {
+                if (response.isSuccessful) {
+                    Log.d("rrrrrrrrrrrrrrrrr", "${response.body()}")
+                    /*val list = taskItemsList.value
+                    val task = list!!.find{ it.Id == id}!!
+                    list.remove(task)
+                    taskItemsList.postValue(list)*/
+
+                    loadData(myContext)
+                }
+                else{
+                    Log.d("rrrrrrrrrrrrrrrrr", "No")
+                }
+            }
+
+            override fun onFailure(call: Call<TaskItem>, t: Throwable) {
+                Log.d("Error", t.message.toString())
+            }
+        })
+
+
+        /*val list = taskItemsList.value
         list!!.add(0, newTask)
         taskItemsList.postValue(list)
 
-        saveDataToJsonFile(myContext)
-    }*/
+        saveDataToJsonFile(myContext)*/
+    }
 
     /*fun updateTaskItem(id: UUID, desc: String){
         val list = taskItemsList.value
@@ -44,7 +75,7 @@ class TaskViewModel: ViewModel() {
         saveDataToJsonFile(myContext)
     }*/
 
-    fun changeChecked(taskItem: TaskItem){
+    /*fun changeChecked(taskItem: TaskItem){
         var changed = if (taskItem.IsCompleted == 1){ 0 }else{ 1 }
 
         RetrofitBuilder.api.updateTodo(taskItem.Id).enqueue(object : Callback<TaskItem> {
@@ -71,13 +102,13 @@ class TaskViewModel: ViewModel() {
 
 
 
-        /*val list = taskItemsList.value
+        val list = taskItemsList.value
         val task = list!!.find{ it.id == taskItem.id}!!
         task.checked = !task.checked
         taskItemsList.postValue(list)
 
-        saveDataToJsonFile(myContext)*/
-    }
+        saveDataToJsonFile(myContext)
+    }*/
 
     fun deleteTaskItem(id: Int){
         RetrofitBuilder.api.deleteTodo(id).enqueue(object : Callback<TaskItem> {

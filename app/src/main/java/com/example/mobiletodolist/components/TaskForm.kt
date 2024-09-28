@@ -39,31 +39,30 @@ class TaskForm(var taskItem: TaskItem?): BottomSheetDialogFragment()
             binding.taskTitle.text = "Добавить задачу"
         }
 
-        /*binding.saveButton.setOnClickListener {
+        binding.saveButton.setOnClickListener {
             if(binding.taskDesc.text.toString() != ""){
                 saveAction()
             }
             else {
                 Toast.makeText(context, "Заполните поле!", LENGTH_SHORT).show()
             }
-        }*/
+        }
     }
 
-    /*private fun saveAction() {
+    private fun saveAction() {
         val description = binding.taskDesc.text.toString()
 
         if (taskItem == null) {
-            val newTaskItem = TaskItem(description)
-            taskViewModel.addTaskItem(newTaskItem)
+            taskViewModel.addTaskItem(description)
         }
-        else {
+        /*else {
             taskViewModel.updateTaskItem(taskItem!!.id, description)
-        }
+        }*/
 
         binding.taskDesc.setText("")
 
         dismiss()
-    }*/
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

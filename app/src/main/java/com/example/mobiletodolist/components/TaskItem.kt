@@ -2,8 +2,9 @@ package com.example.mobiletodolist
 
 import android.content.Context
 import androidx.core.content.ContextCompat
+import kotlinx.serialization.Serializable
 
-
+@Serializable
 data class TaskItem(
     var Id : Int,
     var Description: String,

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("kotlinx-serialization")
 }
 
 android {
@@ -40,16 +41,20 @@ android {
 }
 
 dependencies {
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+    implementation(libs.converter.gson)
+    implementation(libs.retrofit)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.jackson.module.kotlin)
+    implementation(libs.gson.v290)
+    implementation(libs.json)
+    implementation(libs.jetbrains.kotlinx.serialization.json)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation("com.google.code.gson:gson:2.8.8")
+    implementation(libs.google.gson)
     implementation(libs.androidx.runtime.android)
     implementation(libs.androidx.activity.compose)
     testImplementation(libs.junit)

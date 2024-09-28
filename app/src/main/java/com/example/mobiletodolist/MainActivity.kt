@@ -13,6 +13,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mobiletodolist.components.TaskForm
 import com.example.mobiletodolist.databinding.ActivityMainBinding
 import com.example.mobiletodolist.utils.TaskItemsAdapter
 import com.example.mobiletodolist.utils.TaskItemsClickListener
@@ -36,9 +37,9 @@ class MainActivity : AppCompatActivity(), TaskItemsClickListener {
         taskViewModel = ViewModelProvider(this)[TaskViewModel::class.java]
         taskViewModel.loadData(this)
 
-        /*binding.addButton.setOnClickListener {
+        binding.addButton.setOnClickListener {
             TaskForm(null).show(supportFragmentManager, "newTaskTag")
-        }*/
+        }
 
         binding.downloadButton.setOnClickListener {
             taskViewModel.downloadFile()
@@ -73,9 +74,9 @@ class MainActivity : AppCompatActivity(), TaskItemsClickListener {
         TaskForm(taskItem).show(supportFragmentManager, "newTaskTag")
     }*/
 
-    override fun changeCheckedTaskItem(taskItem: TaskItem) {
+    /*override fun changeCheckedTaskItem(taskItem: TaskItem) {
         taskViewModel.changeChecked(taskItem)
-    }
+    }*/
 
     override fun deleteTaskItem(taskItem: TaskItem) {
         taskViewModel.deleteTaskItem(taskItem.Id)
